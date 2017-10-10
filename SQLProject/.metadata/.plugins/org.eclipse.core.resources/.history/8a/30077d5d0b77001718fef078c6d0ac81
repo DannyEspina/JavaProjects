@@ -1,0 +1,223 @@
+
+import java.sql.*;
+import java.util.*;
+public class SQLMethods {
+
+	private Scanner scan;
+	public SQLMethods() {
+		scan = new Scanner(System.in);
+	}
+	public void printMenu() {
+		System.out.println("*********************************************************************");
+		System.out.println("*** 									***");
+		System.out.println("*** 		Welcome to Online Registration System 		***");
+		System.out.println("*** 									***");
+		System.out.println("*********************************************************************");
+		System.out.println("			1. Add a course");
+		System.out.println("			2. Delete a course");
+		System.out.println("			3. Add a student");
+		System.out.println("			4. Delete a student");
+		System.out.println("			5. Register a course");
+		System.out.println("			6. Drop a course");
+		System.out.println("			7. Check student registration");
+		System.out.println("			8. Quit");
+	}
+	public void addCourse(Statement st){
+		
+		String code, title;
+		System.out.println("Course Code: ");
+		code = scan.nextLine();
+		System.out.println("Course Title: ");
+		title = scan.nextLine();
+		
+		try {
+			st.executeUpdate("insert into Course values('"+ code + "','" + title +"')");
+			System.out.println("Course added.");
+		} catch(Exception e)
+		{
+			System.err.println(e.getMessage());			
+		}
+	}
+	public void deleteCourse(Statement st){
+	
+		String code;
+		System.out.print("Please enter the Code: ");
+		code = scan.nextLine();
+		System.out.println();
+		try {
+			ResultSet rs = st.executeQuery("select code from Course where code ='" +code+"'");
+			if(rs.next()==false)
+			{
+				System.err.println("Error: Unkown course code.");
+			}
+			else{
+				
+			st.executeUpdate("delete from Registered where code = '"+code+"'");
+			st.executeUpdate("delete from Course where code ='" +code+"'");
+			System.out.println("Course deleted.");
+			}
+		}catch(Exception e)
+		{
+			System.err.println(e.getMessage());			
+		}
+		
+	}
+	public void addStudent(Statement st) {
+	
+		String ssn, name, address, major;
+		System.out.print("Student ID: ");
+		ssn = scan.nextLine();
+		System.out.println();
+		System.out.print("Student's name: ");
+		name = scan.nextLine();
+		System.out.print("Student's address: ");
+		address = scan.nextLine();
+		System.out.println();
+		System.out.print("Student's major: ");
+		major = scan.nextLine();
+		System.out.println();
+		try {
+			st.executeUpdate("insert into Student values('"+ssn+"','"+name+"','"+address+"','"+major+"')");
+			System.out.println("Student added.");
+		} catch(Exception e)
+		{
+			System.err.println(e.getMessage());			
+		}
+	}
+	public void deleteStudent(Statement st) 
+	{
+	
+		String ssn;
+		System.out.print("Please enter Student SSN: ");
+		ssn = scan.nextLine();
+		System.out.println();
+		try {
+		ResultSet rs = st.executeQuery("select ssn from Student where ssn = '"+ssn+"'");
+		if(rs.next()==false)
+		{
+			System.err.println("Error: Unkown student ssn.");
+		}
+		else{
+		st.executeUpdate("delete from Registered where ssn = '"+ssn+"'");
+		st.executeUpdate("delete from Student where ssn ='" +ssn+"'");
+		System.out.println("Student deleted.");
+		}
+		}catch(Exception e)
+		{
+			System.err.println(e.getMessage());			
+		}
+	}
+	public void RegisterCourse(Statement st) {
+	
+		String ssn, code, year, semester;
+		System.out.print("Student SSN:");
+		ssn= scan.nextLine();
+		System.out.println();
+		System.out.print("Course Code:");
+		code= scan.nextLine();
+		System.out.println();
+		System.out.print("Year:");
+		year= scan.nextLine();
+		System.out.println();
+		System.out.print("Semester:");
+		semester= scan.nextLine();
+		System.out.println();
+		
+		try {
+			ResultSet rs1 = st.executeQuery("select code from Course where code ='" +code+"'");
+			ResultSet rs2 = st.executeQuery("select ssn from Student where ssn = '"+ssn+"'");
+			//ResultSet rs3 = st.executeQuery("select * from Registered r, Student s where r.code = '"+code+"' and s.ssn = r.ssn and "
+				//	+ "year = '"+year+"' and semester = '"+semester+"'");
+			System.out.println(rs1.next());
+			if(rs1.next() == false)
+			{
+				System.err.println("Error: Unkown course code.");
+			}
+//			else if(rs2.next() == false)
+//			{
+//				System.err.println("Error: Unkown student ssn.");
+//			}
+//			else if (rs3.next() == true)
+//			{
+//				System.err.println("Error: Course already registered.");
+//			}
+			else
+			{
+				st.executeUpdate("insert into Registered values('"+ssn+"','"+code+"','"+year+"','"+semester+"')");
+				System.out.println("Course registered.");
+			}
+			
+			}catch(Exception e)
+			{
+				System.err.println(e.getMessage());			
+			}
+		
+	}
+	public void dropCourse(Statement st) {
+	
+		String code, ssn;
+		System.out.print("Student ssn: ");
+		ssn = scan.nextLine();
+		System.out.print("Course code: ");
+		code = scan.nextLine();
+		System.out.println();
+		
+		try {
+			ResultSet rs1 = st.executeQuery("select code from Course where code = '"+code+"'");
+			ResultSet rs2 = st.executeQuery("select ssn from Student where ssn = '"+ssn+"'");
+			
+			if(rs1.next() == false)
+			{
+				System.err.println("Error: Unkown course code.");
+			}
+			else if(rs2.next() == false)
+			{
+				System.err.println("Error: Unkown student ssn.");
+			}
+			else
+			{
+				st.executeUpdate("delete from Registered where code ='"+code+"' and ssn ='"+ssn+"'");
+			}
+		}catch(Exception e)
+		{
+			System.err.println(e.getMessage());		
+		}
+		
+		
+	}
+	public void checkRegistration(Statement st){
+		String ssn, code, semester, year, title;
+		System.out.print("Student SSN:");
+		ssn= scan.nextLine();
+		System.out.println();
+		System.out.println();
+		try {
+			ResultSet rs = st.executeQuery("select * from Registered r, Student s, Course where s.ssn = r.ssn");
+			if(rs.next()==false)
+			{
+				System.err.println("Error: You're not regiestered in any classes.");
+			}
+			else
+			{
+				System.out.println("Student ID | Course Code |      Course Title     | Semester | Year ");
+				while(rs.next())
+				{
+					ssn = rs.getString("ssn");
+					code = rs.getString("code");
+					title = rs.getString("title");
+					semester = rs.getString("semester");
+					year = rs.getString("year");
+					
+					
+					System.out.println(ssn +"   |    " +code +"   | "+title+" | "+semester+" | "+year+" ");
+					
+				}
+			}
+		}catch(Exception e)
+		{
+			System.err.println(e.getMessage());	
+		}
+		
+	}
+	
+}

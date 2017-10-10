@@ -1,0 +1,39 @@
+import java.util.*;
+public class RegistrationDriver {
+
+	public static void main (String[] args){
+		boolean quit = false;
+		Scanner scan = new Scanner(System.in);
+		SQLMethods sql = new SQLMethods();
+		
+		int response = scan.nextInt();
+		do {
+			sql.printMenu();
+			
+			switch(response) {
+			case 1:
+				break;
+			case 2:
+				break;
+			case 3:
+				break;
+			case 4:
+				break;
+			case 5:
+				break;
+			case 6:
+				break;	
+			case 7:
+				break;
+			case 8:
+				quit=true;
+				break;
+			default: 
+				System.out.println("Invaild Input. Try again...");
+				break;
+			}
+		}while(!quit);
+	}
+
+	
+}

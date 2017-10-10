@@ -1,0 +1,89 @@
+
+import java.sql.*;
+import java.util.*;
+public class SQLMethods {
+
+	private Scanner scan;
+	public SQLMethods() {
+		scan = new Scanner(System.in);
+	}
+	public void printMenu() {
+		System.out.println("*********************************************************************");
+		System.out.println("*** 									***");
+		System.out.println("*** 		Welcome to Online Registration System 			***");
+		System.out.println("*** 									***");
+		System.out.println("*********************************************************************");
+		System.out.println("			1. Add a course");
+		System.out.println("			2. Delete a course");
+		System.out.println("			3. Add a student");
+		System.out.println("			4. Delete a student");
+		System.out.println("			5. Register a course");
+		System.out.println("			6. Drop a course");
+		System.out.println("			7. Check student registration");
+		System.out.println("			8. Quit");
+	}
+	public void addCourse(Statement st){
+		String code, title;
+		System.out.print("Course Code: ");
+		code = scan.nextLine();
+		System.out.println();
+		System.out.print("Course Title: ");
+		title = scan.nextLine();
+		
+		try {
+			st.executeUpdate("insert into Course values(code,title)");
+			System.out.println("Course added.");
+		} catch(Exception e)
+		{
+			System.err.println(e.getMessage());			
+		}
+	}
+	public void deleteCourse(Statement st){
+		String code;
+		System.out.println("Please enter the Code:");
+		code = scan.nextLine();
+		try {
+		st.executeUpdate("delete from Course c where c.code = code");
+		System.out.println("Course deleted.");
+		}catch(Exception e)
+		{
+			System.err.println(e.getMessage());			
+		}
+		
+	}
+	public void addStudent(Statement st) {
+		String ssn, name, address, major;
+		System.out.print("Student ID: ");
+		ssn = scan.nextLine();
+		System.out.println();
+		System.out.print("Student's name: ");
+		name = scan.nextLine();
+		System.out.print("Student's address: ");
+		address = scan.nextLine();
+		System.out.println();
+		System.out.print("Student's major: ");
+		major = scan.nextLine();
+		
+		try {
+			st.executeUpdate("insert into Student values(ssn,name,address,major)");
+			System.out.println("Student added.");
+		} catch(Exception e)
+		{
+			System.err.println(e.getMessage());			
+		}
+	}
+	public void deleteStudent(Statement st) 
+	{
+		String ssn;
+		System.out.println("Please enter Student SSN:");
+		ssn = scan.nextLine();
+		try {
+		st.executeUpdate("delete from Student s where s.ssn = ssn");
+		System.out.println("Student deleted.");
+		}catch(Exception e)
+		{
+			System.err.println(e.getMessage());			
+		}
+	}
+	
+}
